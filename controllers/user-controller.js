@@ -58,5 +58,49 @@ const userController = {
         .catch((err) => {
             res.status(500).json(err);
         });
-    }
-}
+    },
+
+    removeUser(req, res) {
+        User.findOneAndRemove({ _id: req.params.userId })
+        .then((dbUserData) => {
+            if(!dbUserData) {
+                return res.status(404).json ({ message: 'No user with this id' });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        })
+    },
+
+    addFriend(req, res) {
+        User.findOneAndUpdate({ _id: req.params.userId },
+            {$addToSet: {freinds: req.params.friendId } },
+            {new: true })
+        .then((dbUserData) => {
+            if (!dbUserData) {
+                return res.status(404).json({ message: 'No user found with this id' });
+            }
+            res.json(dbUserData);
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+    },
+
+    removeFriend(req, res) {
+        User.findOneAndUpdate({ _id: req.params.userId }, 
+            {$pull: { friends: req.params.friendId } }, 
+            { new: true })
+        .then((dbUserData) => {
+            if (!dbUserData) {
+                return res.status(404).json({ message: 'No user found with this id' });
+            }
+            res.json(dbUserData);
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+    },
+};
+
+module.exports = userController;
