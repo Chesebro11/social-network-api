@@ -1,7 +1,8 @@
-const { Schema, model, Types } = require('mongoose');
-// import date format when written
+const { Schema, model } = require('mongoose');
+const reactionSchema = require('./Reaction');
+const dateFormat = require('../utils/dateFormat');
 
-const thoughtSchema = newSchema(
+const thoughtSchema = new Schema(
     {
         thoughtText: {
             type: String,
