@@ -48,6 +48,22 @@ const thoughtController = {
         })
     },
 
+    updateThought(req, res) {
+        Thought.findOneAndUpdate({ _id: req.params.thoughtId }, 
+            { $set: req.body }, 
+            { runValidators: true, new: true })
+          .then((dbThoughtData) => {
+            if (!dbThoughtData) {
+              return res.status(404).json({ message: 'No thought with this id' });
+            }
+            res.json(dbThoughtData);
+          })
+          .catch((err) => {
+            res.status(500).json(err);
+          });
+      },
+    
+
     removeThought(req, res) {
         Thought.findOneAndRemove({ _id: req.params.thoughtId })
         .then((dbThoughtData) => {
@@ -88,7 +104,7 @@ const thoughtController = {
         });
     },
 
-    remmoveReaction(req, res) {
+    removeReaction(req, res) {
         Thought.findOneAndUpdate(
             { _id: req.params.thoughtId },
             { $pull: { reactions: { reactionId: req.params.reactionId } } },
